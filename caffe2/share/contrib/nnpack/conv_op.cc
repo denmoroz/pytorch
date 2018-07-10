@@ -276,7 +276,6 @@ bool NNPACKConvOp::RunOnDeviceWithOrderNCHW() {
       } else {
         LOG(WARNING)
             << "Failed to query workspace size to precompute kernels, falling back to re-compute strategy";
-        std::cout << "Kernel size width:" << kernel_size.width << std::endl;
         transformStrategy_ = nnp_convolution_transform_strategy_compute;
       }
 
