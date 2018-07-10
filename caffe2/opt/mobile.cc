@@ -15,12 +15,14 @@ void addNNPACK(repr::NNModule* nn, bool low_memory) {
 
     // Skip blobs.
     if (!isa<nom::repr::NeuralNetOperator>(nodeData)) {
+      assert(0 && "Assert -1");
       continue;
     }
 
     // Check if it is a convolution.
     auto nnOp = dyn_cast<nom::repr::NeuralNetOperator>(nodeData);
     if (!isa<nom::repr::Conv>(nnOp)) {
+      assert(0 && "Assert 0");
       continue;
     }
 
