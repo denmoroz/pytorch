@@ -89,11 +89,11 @@ inline bool isNNPACKConvReluEfficient(
         return false;
       }
     }
-//    for (auto kernel : conv.getKernelShape()) {
-//      if (kernel < 2) {
-//        return false;
-//      }
-//    }
+    for (auto kernel : conv.getKernelShape()) {
+      if (kernel < 2) {
+        return false;
+      }
+    }
   } else if (!(algo == "WINOGRAD" || algo == "WINOGRAD_FP16" ||
                algo == "FT8x8" || algo == "FT16x16")) {
     return false;
