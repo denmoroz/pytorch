@@ -15,60 +15,53 @@ void addNNPACK(repr::NNModule* nn, bool low_memory) {
 
     // Skip blobs.
     if (!isa<nom::repr::NeuralNetOperator>(nodeData)) {
-      assert(0 && "Assert -1");
       continue;
     }
 
     // Check if it is a convolution.
     auto nnOp = dyn_cast<nom::repr::NeuralNetOperator>(nodeData);
     if (!isa<nom::repr::Conv>(nnOp)) {
-      assert(0 && "Assert 0");
       continue;
     }
 
     // Requires X, W, b for NNPACK
-    if (node->getInEdges().size() < 3) {
-      assert(0 && "Assert 1");
-      continue;
-    }
+//    if (node->getInEdges().size() < 3) {
+//      continue;
+//    }
 
     std::string engine = "NNPACK";
 
     // Now do some specific checks to see if an NNPACK engine is correct.
-    bool validTransformCandidate = true;
+//    bool validTransformCandidate = true;
     auto conv = dyn_cast<nom::repr::Conv>(nnOp);
 
-    if (conv->getLayout() != nom::repr::Conv::NNLayout::NCHW) {
-      assert(0 && "Assert 2");
-      continue;
-    }
-
-    // NNPACK only supports stride == 1
-    for (auto stride : conv->getStrides()) {
-      if (stride != 1) {
-        validTransformCandidate = false;
-        break;
-      }
-    }
-    if (!validTransformCandidate) {
-      assert(0 && "Assert 3");
-      continue;
-    }
-
-    // NNPACK only supports 2DConv.
-    const auto& kernelShape = conv->getKernelShape();
-    if (kernelShape.size() != 2) {
-      assert(0 && "Assert 4");
-      continue;
-    }
-
-    // Kx1 and 1xK convs are inefficient in NNPACK.
-    if (kernelShape[0] != kernelShape[1]) {
-      if (kernelShape[0] == 1 || kernelShape[1] == 1) {
-        assert(0 && "Assert 5");
-        continue;
-      }
-    }
+//    if (conv->getLayout() != nom::repr::Conv::NNLayout::NCHW) {
+//      continue;
+//    }
+//
+//    // NNPACK only supports stride == 1
+//    for (auto stride : conv->getStrides()) {
+//      if (stride != 1) {
+//        validTransformCandidate = false;
+//        break;
+//      }
+//    }
+//    if (!validTransformCandidate) {
+//      continue;
+//    }
+//
+//    // NNPACK only supports 2DConv.
+//    const auto& kernelShape = conv->getKernelShape();
+//    if (kernelShape.size() != 2) {
+//      continue;
+//    }
+//
+//    // Kx1 and 1xK convs are inefficient in NNPACK.
+//    if (kernelShape[0] != kernelShape[1]) {
+//      if (kernelShape[0] == 1 || kernelShape[1] == 1) {
+//        continue;
+//      }
+//    }
 
     // We're good to use our engine.
     auto annotation = conv->getMutableAnnotation();
