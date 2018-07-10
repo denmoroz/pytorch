@@ -26,6 +26,7 @@ void addNNPACK(repr::NNModule* nn, bool low_memory) {
 
     // Requires X, W, b for NNPACK
     if (node->getInEdges().size() < 3) {
+      assert(0 && "Assert 1");
       continue;
     }
 
@@ -36,6 +37,7 @@ void addNNPACK(repr::NNModule* nn, bool low_memory) {
     auto conv = dyn_cast<nom::repr::Conv>(nnOp);
 
     if (conv->getLayout() != nom::repr::Conv::NNLayout::NCHW) {
+      assert(0 && "Assert 2");
       continue;
     }
 
@@ -47,18 +49,21 @@ void addNNPACK(repr::NNModule* nn, bool low_memory) {
       }
     }
     if (!validTransformCandidate) {
+      assert(0 && "Assert 3");
       continue;
     }
 
     // NNPACK only supports 2DConv.
     const auto& kernelShape = conv->getKernelShape();
     if (kernelShape.size() != 2) {
+      assert(0 && "Assert 4");
       continue;
     }
 
     // Kx1 and 1xK convs are inefficient in NNPACK.
     if (kernelShape[0] != kernelShape[1]) {
       if (kernelShape[0] == 1 || kernelShape[1] == 1) {
+        assert(0 && "Assert 5");
         continue;
       }
     }
@@ -89,11 +94,11 @@ inline bool isNNPACKConvReluEfficient(
         return false;
       }
     }
-//    for (auto kernel : conv.getKernelShape()) {
-//      if (kernel < 2) {
-//        return false;
-//      }
-//    }
+    for (auto kernel : conv.getKernelShape()) {
+      if (kernel < 2) {
+        return false;
+      }
+    }
   } else if (!(algo == "WINOGRAD" || algo == "WINOGRAD_FP16" ||
                algo == "FT8x8" || algo == "FT16x16")) {
     return false;
